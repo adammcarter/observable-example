@@ -12,9 +12,9 @@ struct ContentView: View {
     @Environment(SomeProtocol.self) private var someThing
     
     var body: some View {
+        @Bindable var thing = someThing
+        
         VStack {
-            @Bindable var thing = someThing
-            
             TextField("Name", text: $thing.name)
         }
         .padding()
@@ -23,6 +23,7 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
+        .environment(Actual(name: ""))
 }
 
 protocol SomeProtocol: AnyObject, Observable {
@@ -30,16 +31,7 @@ protocol SomeProtocol: AnyObject, Observable {
 }
 
 @Observable
-final class Actual: SomeProtocol {
-    var name: String
-    
-    init(name: String) {
-        self.name = name
-    }
-}
-
-@Observable
-final class Mock: SomeProtocol {
+class Actual: SomeProtocol {
     var name: String
     
     init(name: String) {
